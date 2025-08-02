@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Tiên Nghịch - Xem Phim Online</title>
+    <link
+      rel="stylesheet"
+      href="style.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Search Bar -->
+      <div class="search-container">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Tìm kiếm tập phim..."
+          />
+        </div>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="main-content">
+        <!-- Episodes Sidebar -->
+        <div class="episodes-sidebar">
+          <h3 class="sidebar-title">
+            <i class="fas fa-list"></i>
+            Danh sách tập
+            <span
+              class="episode-count"
+              id="episodeCount"
+              >0 tập</span
+            >
+          </h3>
+          <div
+            class="episodes-list"
+            id="episodesGrid"
+          >
+            <!-- Episodes will be populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Video Player Section -->
+        <div
+          class="video-section"
+          id="videoSection"
+        >
+          <div class="video-container">
+            <h2
+              class="current-episode"
+              id="currentEpisode"
+            >
+              Chọn tập để xem
+            </h2>
+            <div class="video-wrapper">
+              <iframe
+                id="videoPlayer"
+                src=""
+                frameborder="0"
+                allowfullscreen
+                allow="autoplay; encrypted-media"
+              >
+              </iframe>
+            </div>
+            <div class="video-controls">
+              <button
+                class="control-btn"
+                id="prevBtn"
+                disabled
+              >
+                <i class="fas fa-step-backward"></i>
+                Tập trước
+              </button>
+              <div
+                class="episode-nav-controls"
+                id="episodeNavControls"
+                style="display: none"
+              >
+                <button
+                  class="episode-nav-btn"
+                  id="quickPrevBtn"
+                  title="Tập trước"
+                >
+                  <i class="fas fa-backward"></i>
+                </button>
+                <button
+                  class="episode-nav-btn"
+                  id="quickNextBtn"
+                  title="Tập sau"
+                >
+                  <i class="fas fa-forward"></i>
+                </button>
+              </div>
+              <button
+                class="control-btn"
+                id="nextBtn"
+                disabled
+              >
+                Tập sau
+                <i class="fas fa-step-forward"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div
+        class="loading"
+        id="loading"
+      >
+        <div class="spinner"></div>
+        <p>Đang tải video...</p>
+      </div>
+
+      <!-- Fullscreen Help -->
+      <div
+        class="fullscreen-help"
+        id="fullscreenHelp"
+      >
+        <div class="help-content">
+          <i class="fas fa-keyboard"></i>
+          <p>Sử dụng phím tắt khi xem toàn màn hình:</p>
+          <div class="shortcuts">
+            <span><kbd>←</kbd> Tập trước</span>
+            <span><kbd>→</kbd> Tập sau</span>
+            <span><kbd>ESC</kbd> Thoát toàn màn hình</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="LinksTienNghich.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
