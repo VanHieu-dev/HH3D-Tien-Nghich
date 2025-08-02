@@ -25,6 +25,9 @@ class MoviePlayer {
       searchInput: document.getElementById('searchInput'),
       videoSection: document.getElementById('videoSection'),
       videoPlayer: document.getElementById('videoPlayer'),
+      videoPlayerContainer: document.getElementById('videoPlayerContainer'),
+      videoInfo: document.getElementById('videoInfo'),
+      watchBtn: document.getElementById('watchBtn'),
       currentEpisode: document.getElementById('currentEpisode'),
       prevBtn: document.getElementById('prevBtn'),
       nextBtn: document.getElementById('nextBtn'),
@@ -41,7 +44,7 @@ class MoviePlayer {
   }
 
   setupEventListeners() {
-    const { searchInput, prevBtn, nextBtn, quickPrevBtn, quickNextBtn } =
+    const { searchInput, prevBtn, nextBtn, quickPrevBtn, quickNextBtn, watchBtn } =
       this.elements;
 
     // Search functionality
@@ -49,43 +52,21 @@ class MoviePlayer {
       this.filterEpisodes(e.target.value),
     );
 
-    // Navigation buttons - unified handler
-    [prevBtn, quickPrevBtn].forEach((btn) =>
-      btn.addEventListener('click', () => this.navigateEpisode(-1)),
-    );
-    [nextBtn, quickNextBtn].forEach((btn) =>
-      btn.addEventListener('click', () => this.navigateEpisode(1)),
-    );
+    // Navigation buttons
+    prevBtn.addEventListener('click', () => this.navigateEpisode(-1));
+    nextBtn.addEventListener('click', () => this.navigateEpisode(1));
+    quickPrevBtn.addEventListener('click', () => this.navigateEpisode(-1));
+    quickNextBtn.addEventListener('click', () => this.navigateEpisode(1));
+
+    // Watch button for opening video in new tab
+    watchBtn.addEventListener('click', () => this.openVideoInNewTab());
 
     // Keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-      if (e.target.tagName === 'INPUT') return;
+    document.addEventListener('keydown', (e) => this.handleKeyboard(e));
 
-      switch (e.key) {
-        case 'ArrowLeft':
-          e.preventDefault();
-          this.navigateEpisode(-1);
-          break;
-        case 'ArrowRight':
-          e.preventDefault();
-          this.navigateEpisode(1);
-          break;
-        case 'Escape':
-          if (document.fullscreenElement) {
-            document.exitFullscreen();
-          }
-          break;
-      }
-    });
-
-    // Fullscreen detection
-    [
-      'fullscreenchange',
-      'webkitfullscreenchange',
-      'mozfullscreenchange',
-      'MSFullscreenChange',
-    ].forEach((event) =>
-      document.addEventListener(event, () => this.handleFullscreenChange()),
+    // Fullscreen events
+    document.addEventListener('fullscreenchange', () =>
+      this.handleFullscreenChange(),
     );
   }
 
@@ -133,10 +114,18 @@ class MoviePlayer {
     if (!episode) return;
 
     this.currentEpisodeIndex = index;
+    this.currentVideoUrl = episode.videoUrl;
 
-    // Update video
-    this.elements.videoPlayer.src = episode.videoUrl;
+    // Update episode title
     this.elements.currentEpisode.textContent = episode.title;
+
+    // Check if this is a Facebook video or external video
+    if (episode.videoUrl.includes('facebook.com')) {
+      this.showVideoInfo('Facebook Video', 'Video từ Facebook sẽ mở trong tab mới');
+    } else {
+      // Try to show iframe first, fallback to external link if blocked
+      this.tryLoadIframe(episode);
+    }
 
     // Update UI
     this.updateActiveState();
@@ -150,6 +139,54 @@ class MoviePlayer {
     });
 
     console.log(`▶️ Playing: ${episode.title}`);
+  }
+
+  tryLoadIframe(episode) {
+    // Hide video info and show iframe
+    this.elements.videoInfo.style.display = 'none';
+    this.elements.videoPlayer.style.display = 'block';
+    this.elements.watchBtn.style.display = 'none';
+    
+    // Set iframe source
+    this.elements.videoPlayer.src = episode.videoUrl;
+    
+    // Set up fallback in case iframe fails to load
+    setTimeout(() => {
+      this.checkIframeLoad(episode);
+    }, 3000);
+  }
+
+  checkIframeLoad(episode) {
+    // Check if iframe loaded successfully
+    try {
+      const iframe = this.elements.videoPlayer;
+      // If iframe is blocked, it will have no content or throw an error
+      if (!iframe.contentDocument && !iframe.contentWindow) {
+        this.showVideoInfo('Video bị chặn', 'Do chính sách bảo mật, video không thể nhúng trực tiếp');
+      }
+    } catch (e) {
+      // Iframe blocked by CSP
+      this.showVideoInfo('Video bị chặn', 'Do chính sách bảo mật, video không thể nhúng trực tiếp');
+    }
+  }
+
+  showVideoInfo(title, message) {
+    // Hide iframe and show video info
+    this.elements.videoPlayer.style.display = 'none';
+    this.elements.videoInfo.style.display = 'flex';
+    this.elements.watchBtn.style.display = 'flex';
+    
+    // Update info text
+    const h3 = this.elements.videoInfo.querySelector('h3');
+    const p = this.elements.videoInfo.querySelector('.video-note');
+    if (h3) h3.textContent = title;
+    if (p) p.textContent = message;
+  }
+
+  openVideoInNewTab() {
+    if (this.currentVideoUrl) {
+      window.open(this.currentVideoUrl, '_blank');
+    }
   }
 
   navigateEpisode(direction) {

@@ -68,14 +68,28 @@
               Chọn tập để xem
             </h2>
             <div class="video-wrapper">
-              <iframe
-                id="videoPlayer"
-                src=""
-                frameborder="0"
-                allowfullscreen
-                allow="autoplay; encrypted-media"
-              >
-              </iframe>
+              <div class="video-player-container" id="videoPlayerContainer">
+                <div class="video-info" id="videoInfo">
+                  <div class="video-thumbnail">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
+                  <h3>Click để xem video</h3>
+                  <p class="video-note">Video sẽ mở trong tab mới do chính sách bảo mật của server</p>
+                  <button class="watch-btn" id="watchBtn" style="display: none;">
+                    <i class="fas fa-external-link-alt"></i>
+                    Xem Video
+                  </button>
+                </div>
+                <iframe
+                  id="videoPlayer"
+                  src=""
+                  frameborder="0"
+                  allowfullscreen
+                  allow="autoplay; encrypted-media"
+                  style="display: none;"
+                >
+                </iframe>
+              </div>
             </div>
             <div class="video-controls">
               <button
