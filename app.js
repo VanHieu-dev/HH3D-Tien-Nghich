@@ -44,8 +44,14 @@ class MoviePlayer {
   }
 
   setupEventListeners() {
-    const { searchInput, prevBtn, nextBtn, quickPrevBtn, quickNextBtn, watchBtn } =
-      this.elements;
+    const {
+      searchInput,
+      prevBtn,
+      nextBtn,
+      quickPrevBtn,
+      quickNextBtn,
+      watchBtn,
+    } = this.elements;
 
     // Search functionality
     searchInput.addEventListener('input', (e) =>
@@ -121,7 +127,10 @@ class MoviePlayer {
 
     // Check if this is a Facebook video or external video
     if (episode.videoUrl.includes('facebook.com')) {
-      this.showVideoInfo('Facebook Video', 'Video từ Facebook sẽ mở trong tab mới');
+      this.showVideoInfo(
+        'Facebook Video',
+        'Video từ Facebook sẽ mở trong tab mới',
+      );
     } else {
       // Try to show iframe first, fallback to external link if blocked
       this.tryLoadIframe(episode);
@@ -146,10 +155,10 @@ class MoviePlayer {
     this.elements.videoInfo.style.display = 'none';
     this.elements.videoPlayer.style.display = 'block';
     this.elements.watchBtn.style.display = 'none';
-    
+
     // Set iframe source
     this.elements.videoPlayer.src = episode.videoUrl;
-    
+
     // Set up fallback in case iframe fails to load
     setTimeout(() => {
       this.checkIframeLoad(episode);
@@ -162,11 +171,17 @@ class MoviePlayer {
       const iframe = this.elements.videoPlayer;
       // If iframe is blocked, it will have no content or throw an error
       if (!iframe.contentDocument && !iframe.contentWindow) {
-        this.showVideoInfo('Video bị chặn', 'Do chính sách bảo mật, video không thể nhúng trực tiếp');
+        this.showVideoInfo(
+          'Video bị chặn',
+          'Do chính sách bảo mật, video không thể nhúng trực tiếp',
+        );
       }
     } catch (e) {
       // Iframe blocked by CSP
-      this.showVideoInfo('Video bị chặn', 'Do chính sách bảo mật, video không thể nhúng trực tiếp');
+      this.showVideoInfo(
+        'Video bị chặn',
+        'Do chính sách bảo mật, video không thể nhúng trực tiếp',
+      );
     }
   }
 
@@ -175,7 +190,7 @@ class MoviePlayer {
     this.elements.videoPlayer.style.display = 'none';
     this.elements.videoInfo.style.display = 'flex';
     this.elements.watchBtn.style.display = 'flex';
-    
+
     // Update info text
     const h3 = this.elements.videoInfo.querySelector('h3');
     const p = this.elements.videoInfo.querySelector('.video-note');

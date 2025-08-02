@@ -742,7 +742,7 @@ kbd {
   }
 }
 
-  /* Smaller episode navigation controls on mobile */
+/* Smaller episode navigation controls on mobile */
 .episode-nav-btn {
   width: 35px;
   height: 35px;
